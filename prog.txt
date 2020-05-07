@@ -4,7 +4,7 @@ begin
 
 int Arr_name[a[bc[100]]];
 
-for i= 5.1 to 2+3*5 do
+for i= 5.1 to 2+3* 5 do
 
 var = Arr_name[var];
 

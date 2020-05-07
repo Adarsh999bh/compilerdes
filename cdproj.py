@@ -116,11 +116,14 @@ no_ele={'1':14,'2':2,'3':2,'4':4,'5':0,'6':6,'7':8,'8':18,'9':6,'10':6,'11':2,'1
 #grammar head (non-terminal)
 gram_name={'1':'S','2':'CODE','3':'CODE','4':'CODE','5':'CODE','6':'DEC','7':'ARRAY','8':'FORL','9':'E','10':'E','11':'E','12':'T','13':'T','14':'T','15':'F','16':'F','17':'F','18':'STMT'}
 
+pointer_dict=[]
+
 #error handler
-def error_handler(pointer):
-    #yet to write the code
-    print('hello')
-    x=6
+def get_line_no(pointer,program_string):
+    x=0
+    for k in range(0,pointer+1):
+        if program_string[k]=='\n':
+            x+=1
     return x
 
 #tokenizer method
@@ -138,8 +141,12 @@ def tokenizer(program_string):
                 pointer+=1    
             if current_string in tokens:
                 lis.append(tokens[tokens.index(current_string)])
+                x=get_line_no(pointer,program_string)
+                pointer_dict.append([current_string,x])
             else:
-                lis.append('id')    
+                lis.append('id')
+                x=get_line_no(pointer,program_string)
+                pointer_dict.append([current_string,x])   
         elif program_string[pointer].isnumeric():
             current_string+=program_string[pointer]
             pointer+=1
@@ -150,14 +157,25 @@ def tokenizer(program_string):
                 current_string+=program_string[pointer]
                 pointer+=1
             if dot_count>1:
-                x=error_handler(pointer)
+                x=get_line_no(pointer,program_string)
                 print('Error in Tokenizer Line No. : '+str(x)+' unidentified token '+current_string)
                 exit()
             else:
-                lis.append('num')
+                if program_string[pointer]==' ' or program_string[pointer]==']' or program_string[pointer]=='+' or program_string[pointer]=='-' or program_string[pointer]=='*' or program_string[pointer]=='/':
+                    lis.append('num')
+                    x=get_line_no(pointer,program_string)
+                    pointer_dict.append([current_string,x])
+                else:
+                    x=get_line_no(pointer,program_string)
+                    current_string+=program_string[pointer]
+                    print('Error in Tokenizer Line No. : '+str(x)+' unidentified token '+current_string)
+                    exit()
+
         else:
             if program_string[pointer]!=" " and program_string[pointer]!="\n":
                 lis.append(tokens[tokens.index(program_string[pointer])])
+                x=get_line_no(pointer,program_string)
+                pointer_dict.append([current_string,x])
                 pointer+=1
             else:
                 pointer+=1                             
@@ -188,13 +206,15 @@ def syntax_analyser(token_list):
             top+=1
             print(stack_token)    
         elif(x[0]=='NA'):
-            print("syntax error..!")
+            print("\nsyntax error..!")
+            print('\nnear line no :'+str(pointer_dict[i][1])+' not a valid syntax or keyword:'+pointer_dict[i][0])
+           # +str(pointer_dict[token_list[i]])+':'+token_list[i]
             exit()
         elif(x[0]=='A'):
             print("accepted..!\n")
             exit()
         else:
-            break;        
+            break        
                 
 
 
@@ -217,9 +237,10 @@ def main():
     syntax_analyser(token_list)
 
 
-
-
-try:
-    main()
-except Exception as e:
-    print("Compiler: Unkown compile time Exception occured..."+e)        
+# try:
+#     main()
+# except Exception as e:
+#     print("Compiler: Unkown compile time Exception occured...")
+#     print(e)
+#         
+main()
