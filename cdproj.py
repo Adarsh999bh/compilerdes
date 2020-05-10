@@ -66,7 +66,7 @@ parse_table={'0':{'int':'S 2','main':'NA','(':'NA',')':'NA','begin':'NA','end':'
 ,
 '25':{'int':'NA','main':'NA','(':'NA',')':'NA','begin':'NA','end':'NA',';':'R 7','id':'NA','[':'NA',']':'R 7','num':'NA','for':'NA','=':'NA','to':'NA','do':'R 7','+':'R 7','-':'R 7','*':'R 7','/':'R 7','$':'NA','S':'NA','CODE':'NA','DEC':'NA','ARRAY':'NA','F':'NA','FORL':'NA','E':'NA','T':'NA','STMT':'NA'}
 ,
-'26':{'int':'NA','main':'NA','(':'NA',')':'NA','begin':'NA','end':'NA',';':'NA','id':'S 26','[':'NA',']':'NA','num':'S 22','for':'NA','=':'NA','to':'NA','do':'NA','+':'NA','-':'NA','*':'NA','/':'NA','$':'NA','S':'NA','CODE':'NA','DEC':'NA','ARRAY':'23','F':'37','FORL':'NA','E':'27','T':'28','STMT':'NA'}
+'26':{'int':'NA','main':'NA','(':'NA',')':'NA','begin':'NA','end':'NA',';':'NA','id':'S 21','[':'NA',']':'NA','num':'S 22','for':'NA','=':'NA','to':'NA','do':'NA','+':'NA','-':'NA','*':'NA','/':'NA','$':'NA','S':'NA','CODE':'NA','DEC':'NA','ARRAY':'23','F':'37','FORL':'NA','E':'27','T':'28','STMT':'NA'}
 ,
 '27':{'int':'NA','main':'NA','(':'NA',')':'NA','begin':'NA','end':'NA',';':'NA','id':'NA','[':'NA',']':'NA','num':'NA','for':'NA','=':'NA','to':'NA','do':'S 29','+':'S 30','-':'S 31','*':'NA','/':'NA','$':'NA','S':'NA','CODE':'NA','DEC':'NA','ARRAY':'NA','F':'NA','FORL':'NA','E':'NA','T':'NA','STMT':'NA'}
 ,
@@ -151,7 +151,7 @@ def tokenizer(program_string):
                 pointer+=1
             if dot_count>1:
                 x=get_line_no(pointer,program_string)
-                print('Error in Tokenizer Line No. : '+str(x)+' unidentified token '+current_string)
+                print('Error in Tokenizer Line No. : '+str(x+1)+' unidentified token '+current_string)
                 exit()
             else:
                 if program_string[pointer]==' ' or program_string[pointer]==']' or program_string[pointer]=='+' or program_string[pointer]=='-' or program_string[pointer]=='*' or program_string[pointer]=='/' or program_string[pointer]==';':
@@ -163,12 +163,11 @@ def tokenizer(program_string):
                     current_string+=program_string[pointer]
                     print('Error in Tokenizer Line No. : '+str(x)+' unidentified token '+current_string)
                     exit()
-
         else:
             if program_string[pointer]!=" " and program_string[pointer]!="\n":
                 lis.append(tokens[tokens.index(program_string[pointer])])
                 x=get_line_no(pointer,program_string)
-                pointer_list.append([current_string,x])
+                pointer_list.append([program_string[pointer],x])
                 pointer+=1
             else:
                 pointer+=1                             
@@ -200,7 +199,7 @@ def syntax_analyser(token_list):
             print(stack_token)    
         elif(x[0]=='NA'):
             print("\nsyntax error..!")
-            print('\nnear line no :'+str(pointer_dict[i][1])+' not a valid syntax or keyword:'+pointer_dict[i][0])
+            print('\nnear line no :'+str(pointer_list[i][1]+1)+' not a valid syntax or keyword: '+pointer_list[i-1][0]+' '+pointer_list[i][0]+' '+pointer_list[i+1][0])
             exit()
         elif(x[0]=='A'):
             print("accepted..!\n")
